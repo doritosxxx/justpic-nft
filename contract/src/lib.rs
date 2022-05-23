@@ -1,4 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::Gas;
 use near_sdk::{env, near_bindgen};
 
 #[near_bindgen]
@@ -9,17 +10,18 @@ pub struct Contract {
 
 #[near_bindgen]
 impl Contract {
-	pub fn run(&mut self) {
-		env::log(format!("Deposit: {}", env::attached_deposit()).as_bytes());
+	pub fn run(&mut self, reserved: u64) -> u128 {
+		env::log(format!("Prepaid: {}", env::prepaid_gas()).as_bytes());
+
+		let mut last: Gas = env::used_gas();
 		self.iterations = 0;
 		loop {
+			if env::used_gas() + reserved * (env::used_gas() - last) > env::prepaid_gas() {
+				env::log(format!("Iterations: {}", self.iterations).as_bytes());
+				return self.iterations;
+			}
 			self.iterations += 1;
-			if self.iterations == 1 {
-				env::log("1".as_bytes());
-			}
-			if self.iterations == 10000 {
-				env::log("10000".as_bytes());
-			}
+			last = env::used_gas();
 		}
 	}
 
