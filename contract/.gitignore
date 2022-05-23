@@ -1,3 +1,4 @@
 /target
-/res
+/out
+/neardev
 /Cargo.lock
