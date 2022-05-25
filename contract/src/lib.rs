@@ -1,31 +1,40 @@
+use near_contract_standards::non_fungible_token::metadata::NFTContractMetadata;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::Gas;
-use near_sdk::{env, near_bindgen};
+use near_sdk::AccountId;
+use near_sdk::{env, near_bindgen, PanicOnDefault};
 
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize, Default)]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
+
 pub struct Contract {
-	iterations: u128,
+	owner_id: AccountId,
+	// TODO: Convert to LazyOption<NFTContractMetadata>.
+	metadata: NFTContractMetadata,
 }
+
+// near_contract_standards::impl_non_fungible_token_core!(Contract, tokens);
 
 #[near_bindgen]
 impl Contract {
-	pub fn run(&mut self, reserved: u64) -> u128 {
-		env::log(format!("Prepaid: {}", env::prepaid_gas()).as_bytes());
-
-		let mut last: Gas = env::used_gas();
-		self.iterations = 0;
-		loop {
-			if env::used_gas() + reserved * (env::used_gas() - last) > env::prepaid_gas() {
-				env::log(format!("Iterations: {}", self.iterations).as_bytes());
-				return self.iterations;
-			}
-			self.iterations += 1;
-			last = env::used_gas();
-		}
+	#[init]
+	pub fn new(owner_id: AccountId) -> Self {
+		let metadata = NFTContractMetadata {
+			spec: String::from("nft-1.0.0"), // required, essentially a version like "nft-1.0.0"
+			name: String::from("justpic"),   // required, ex. "Mosaics"
+			symbol: String::from("JPIC"),    // required, ex. "MOSIAC"
+			icon: None,                      // Data URL
+			base_uri: None, // Centralized gateway known to have reliable access to decentralized storage assets referenced by `reference` or `media` URLs
+			reference: None, // URL to a JSON file with more info
+			reference_hash: None, // Base64-encoded sha256 hash of JSON from reference field. Required if `reference` is included.
+		};
+		Self { metadata, owner_id }
 	}
 
-	pub fn iterations(self) -> u128 {
-		self.iterations
+	pub fn clear_state() {
+		env::storage_remove(b"STATE");
+	}
+
+	pub fn get_int() -> i32 {
+		32
 	}
 }
