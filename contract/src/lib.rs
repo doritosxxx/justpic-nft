@@ -1,6 +1,6 @@
 use crate::metadata::NonFungibleTokenMetadata;
+use crate::structs::NFTToken::{Token, TokenId};
 
-use near_contract_standards::non_fungible_token::{Token, TokenId};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap};
 use near_sdk::AccountId;
