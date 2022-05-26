@@ -1,5 +1,5 @@
-use crate::AccountId;
-use crate::Token;
+use near_contract_standards::non_fungible_token::Token;
+use near_sdk::AccountId;
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::PromiseOrValue;
 
