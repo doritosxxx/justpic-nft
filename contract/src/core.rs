@@ -12,6 +12,9 @@ pub trait NonFungibleTokenCore {
 	) -> PromiseOrValue<bool>;
 
 	fn nft_token(&self, token_id: TokenId) -> Option<Token>;
+
+	// TODO:
+	// fn nft_resolve_transfer
 }
 
 #[near_bindgen]
