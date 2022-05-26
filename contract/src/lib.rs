@@ -1,18 +1,20 @@
-use near_contract_standards::non_fungible_token::metadata::NFTContractMetadata;
+use crate::metadata::NFTContractMetadata;
+use metadata::NonFungibleTokenMetadata;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::collections::LazyOption;
+use near_sdk::json_types::Base64VecU8;
 use near_sdk::AccountId;
 use near_sdk::{env, near_bindgen, PanicOnDefault};
 
+// Import metadata functionality.
+mod metadata;
+
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
-
 pub struct Contract {
 	owner_id: AccountId,
-	// TODO: Convert to LazyOption<NFTContractMetadata>.
-	metadata: NFTContractMetadata,
+	metadata: LazyOption<NFTContractMetadata>,
 }
-
-// near_contract_standards::impl_non_fungible_token_core!(Contract, tokens);
 
 #[near_bindgen]
 impl Contract {
@@ -27,14 +29,29 @@ impl Contract {
 			reference: None, // URL to a JSON file with more info
 			reference_hash: None, // Base64-encoded sha256 hash of JSON from reference field. Required if `reference` is included.
 		};
-		Self { metadata, owner_id }
+
+		let option: LazyOption<NFTContractMetadata> =
+			LazyOption::new(b"meta".try_to_vec().unwrap(), Some(&metadata));
+		Self {
+			metadata: option,
+			owner_id,
+		}
 	}
 
-	pub fn clear_state() {
+	pub fn clear_state(&self) {
 		env::storage_remove(b"STATE");
 	}
 
-	pub fn get_int() -> i32 {
+	pub fn get_int(&self) -> i32 {
 		32
 	}
+}
+
+#[test]
+fn test_get_metadata() {
+	let contract = Contract::new("doritosxxx3.testnet".parse().unwrap());
+
+	let metadata = contract.nft_metadata();
+
+	assert_eq!(String::from("justpic"), metadata.name);
 }
