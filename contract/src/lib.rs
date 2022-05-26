@@ -1,16 +1,17 @@
-use crate::metadata::NFTContractMetadata;
 use crate::metadata::NonFungibleTokenMetadata;
 
 use near_contract_standards::non_fungible_token::{Token, TokenId};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap};
-use near_sdk::json_types::Base64VecU8;
 use near_sdk::AccountId;
 use near_sdk::{env, near_bindgen, PanicOnDefault};
+
+use crate::structs::NFTContractMetadata::NFTContractMetadata;
 
 mod core;
 mod metadata;
 mod mint;
+mod structs;
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
