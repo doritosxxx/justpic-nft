@@ -1,4 +1,5 @@
 use crate::structs::NFTToken::{Token, TokenId};
+use crate::structs::TokenMetadata::TokenMetadata;
 use crate::*;
 use near_sdk::{near_bindgen, AccountId};
 
@@ -12,6 +13,7 @@ impl NonFungibleTokenMint for Contract {
 		let token = Token {
 			owner_id: receiver_id,
 			token_id: token_id.clone(),
+			metadata: TokenMetadata::default(),
 		};
 		self.tokens_by_id.insert(&token_id.into(), &token);
 	}
