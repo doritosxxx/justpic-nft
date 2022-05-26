@@ -1,19 +1,23 @@
 use crate::metadata::NFTContractMetadata;
-use metadata::NonFungibleTokenMetadata;
+use crate::metadata::NonFungibleTokenMetadata;
+
+use near_contract_standards::non_fungible_token::{Token, TokenId};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::LazyOption;
+use near_sdk::collections::{LazyOption, LookupMap};
 use near_sdk::json_types::Base64VecU8;
 use near_sdk::AccountId;
 use near_sdk::{env, near_bindgen, PanicOnDefault};
 
-// Import metadata functionality.
+mod core;
 mod metadata;
+mod mint;
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
 	owner_id: AccountId,
 	metadata: LazyOption<NFTContractMetadata>,
+	tokens_by_id: LookupMap<TokenId, Token>,
 }
 
 #[near_bindgen]
@@ -35,6 +39,7 @@ impl Contract {
 		Self {
 			metadata: option,
 			owner_id,
+			tokens_by_id: LookupMap::new("byid".as_bytes()),
 		}
 	}
 
