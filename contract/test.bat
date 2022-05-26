@@ -1,0 +1,1 @@
+cargo test --package contract
