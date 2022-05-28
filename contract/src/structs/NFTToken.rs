@@ -13,3 +13,13 @@ pub struct Token {
 	pub owner_id: AccountId,
 	pub metadata: TokenMetadata,
 }
+
+impl Token {
+	pub fn default(owner_id: AccountId) -> Self {
+		Self {
+			metadata: TokenMetadata::default(),
+			owner_id: owner_id,
+			token_id: "1".into(),
+		}
+	}
+}
