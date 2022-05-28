@@ -1,4 +1,5 @@
-use crate::{AccountId, TokenId};
+use near_contract_standards::non_fungible_token::TokenId;
+use near_sdk::AccountId;
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::serde_json;
 use std::fmt;

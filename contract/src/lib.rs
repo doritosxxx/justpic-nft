@@ -1,21 +1,18 @@
-use near_sdk::collections::UnorderedSet;
 use crate::metadata::NonFungibleTokenMetadata;
-use crate::structs::NFTToken::{Token, TokenId};
-use near_sdk::collections::LookupSet;
+use crate::structs::NFTContractMetadata::NFTContractMetadata;
+use crate::structs::NFTToken::Token;
+use near_contract_standards::non_fungible_token::TokenId;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LazyOption, LookupMap};
-use near_sdk::AccountId;
-use near_sdk::{env, near_bindgen, PanicOnDefault};
-
-use crate::structs::NFTContractMetadata::NFTContractMetadata;
+use near_sdk::collections::{LazyOption, LookupMap, UnorderedSet};
+use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault};
 
 mod core;
 mod enumeration;
+mod events;
 mod metadata;
 mod mint;
 mod structs;
-mod events;
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]

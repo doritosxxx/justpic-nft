@@ -1,8 +1,9 @@
 use crate::events::*;
-use crate::structs::NFTToken::{Token, TokenId};
+use crate::structs::NFTToken::Token;
 use crate::structs::TokenMetadata::TokenMetadata;
-use crate::*;
-use near_sdk::{near_bindgen, require, AccountId};
+use crate::{Contract, ContractExt};
+use near_contract_standards::non_fungible_token::TokenId;
+use near_sdk::{env, near_bindgen, require, AccountId};
 
 pub trait NonFungibleTokenMint {
 	fn nft_mint(&mut self, token_id: TokenId, receiver_id: AccountId);

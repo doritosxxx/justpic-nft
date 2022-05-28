@@ -1,5 +1,6 @@
-use crate::*;
-use near_sdk::{env, near_bindgen, require, AccountId, PromiseOrValue};
+use crate::{Contract, ContractExt, Token};
+use near_contract_standards::non_fungible_token::TokenId;
+use near_sdk::{near_bindgen, AccountId, PromiseOrValue};
 
 pub trait NonFungibleTokenCore {
 	fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>);
@@ -19,9 +20,7 @@ pub trait NonFungibleTokenCore {
 
 #[near_bindgen]
 impl NonFungibleTokenCore for Contract {
-	fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>) {
-		
-	}
+	fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>) {}
 
 	fn nft_transfer_call(
 		&mut self,

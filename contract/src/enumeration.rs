@@ -1,5 +1,4 @@
-use crate::core::NonFungibleTokenCore;
-use crate::*;
+use crate::{Contract, ContractExt};
 use near_sdk::{near_bindgen, AccountId};
 
 use crate::structs::NFTToken::Token;
