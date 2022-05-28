@@ -58,16 +58,56 @@ impl EventLog {
 }
 
 #[test]
-fn ser() {
-	//let log = EventLog::new(data: LogOption)
+fn mint_log() {
 	let log = EventLog::new(LogOption::NftMint(vec![MintLog {
 		owner_id: String::from("alice.near"),
 		token_ids: vec![String::from("aurora")],
 		memo: None,
 	}]));
 
-	eprintln!("{}", log);
-
 	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["aurora"],"memo":null}]}"#;
+	assert_eq!(expected, log.to_string());
+}
+
+#[test]
+fn mint_log_empty_tokens() {
+	let log = EventLog::new(LogOption::NftMint(vec![MintLog {
+		owner_id: String::from("bob.near"),
+		token_ids: vec![],
+		memo: None,
+	}]));
+
+	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"bob.near","token_ids":[],"memo":null}]}"#;
+	assert_eq!(expected, log.to_string());
+}
+
+#[test]
+fn mint_log_multiple_logs() {
+	let log = EventLog::new(LogOption::NftMint(vec![
+		MintLog {
+			owner_id: String::from("alice.near"),
+			token_ids: vec!["to_alice".to_string()],
+			memo: None,
+		},
+		MintLog {
+			owner_id: String::from("bob.near"),
+			token_ids: vec!["to_bob".to_string()],
+			memo: None,
+		},
+	]));
+
+	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["to_alice"],"memo":null},{"owner_id":"bob.near","token_ids":["to_bob"],"memo":null}]}"#;
+	assert_eq!(expected, log.to_string());
+}
+
+#[test]
+fn mint_log_multiple_tokens() {
+	let log = EventLog::new(LogOption::NftMint(vec![MintLog {
+		owner_id: String::from("alice.near"),
+		token_ids: vec!["first".to_string(), "second".to_string(), "3".to_string()],
+		memo: None,
+	}]));
+
+	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["first","second","3"],"memo":null}]}"#;
 	assert_eq!(expected, log.to_string());
 }
