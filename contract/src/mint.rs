@@ -1,6 +1,4 @@
 use crate::events::*;
-use crate::structs::NFTToken::Token;
-use crate::structs::TokenMetadata::TokenMetadata;
 use crate::{Contract, ContractExt};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::{env, near_bindgen, require, AccountId};
