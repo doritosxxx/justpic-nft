@@ -1,3 +1,4 @@
+use crate::events::*;
 use crate::structs::NFTToken::{Token, TokenId};
 use crate::structs::TokenMetadata::TokenMetadata;
 use crate::*;
@@ -23,5 +24,17 @@ impl NonFungibleTokenMint for Contract {
 		self.owner_by_id.insert(&token_id, &receiver_id);
 		self.owner_list.insert(&receiver_id);
 		self.total_supply += 1;
+
+		log_mint(receiver_id, vec![token_id]);
 	}
+}
+
+fn log_mint(owner_id: AccountId, token_ids: Vec<TokenId>) {
+	let log = EventLog::new(LogOption::NftMint(vec![MintLog {
+		owner_id,
+		token_ids,
+		memo: None,
+	}]));
+
+	env::log_str(&log.to_string());
 }
