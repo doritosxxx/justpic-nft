@@ -1,10 +1,11 @@
+use crate::{AccountId, TokenId};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::serde_json;
 use std::fmt;
 
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
-struct EventLog {
+pub struct EventLog {
 	standard: String,
 	version: String,
 	#[serde(flatten)]
@@ -15,27 +16,27 @@ struct EventLog {
 #[serde(tag = "event", content = "data")]
 #[serde(rename_all = "snake_case")]
 #[serde(crate = "near_sdk::serde")]
-enum LogOption {
+pub enum LogOption {
 	NftMint(Vec<MintLog>),
 	NftTransfer(Vec<TransferLog>),
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
-struct MintLog {
-	owner_id: String,
-	token_ids: Vec<String>,
-	memo: Option<String>,
+pub struct MintLog {
+	pub owner_id: AccountId,
+	pub token_ids: Vec<TokenId>,
+	pub memo: Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
-struct TransferLog {
-	authorized_id: Option<String>,
-	old_owner_id: String,
-	new_owner_id: String,
-	token_ids: Vec<String>,
-	memo: Option<String>,
+pub struct TransferLog {
+	pub authorized_id: Option<AccountId>,
+	pub old_owner_id: AccountId,
+	pub new_owner_id: AccountId,
+	pub token_ids: Vec<TokenId>,
+	pub memo: Option<String>,
 }
 
 impl fmt::Display for EventLog {
@@ -60,8 +61,8 @@ impl EventLog {
 #[test]
 fn mint_log() {
 	let log = EventLog::new(LogOption::NftMint(vec![MintLog {
-		owner_id: String::from("alice.near"),
-		token_ids: vec![String::from("aurora")],
+		owner_id: "alice.near".parse().unwrap(),
+		token_ids: vec!["aurora".parse().unwrap()],
 		memo: None,
 	}]));
 
@@ -72,7 +73,7 @@ fn mint_log() {
 #[test]
 fn mint_log_empty_tokens() {
 	let log = EventLog::new(LogOption::NftMint(vec![MintLog {
-		owner_id: String::from("bob.near"),
+		owner_id: "bob.near".parse().unwrap(),
 		token_ids: vec![],
 		memo: None,
 	}]));
@@ -85,13 +86,13 @@ fn mint_log_empty_tokens() {
 fn mint_log_multiple_logs() {
 	let log = EventLog::new(LogOption::NftMint(vec![
 		MintLog {
-			owner_id: String::from("alice.near"),
+			owner_id: "alice.near".parse().unwrap(),
 			token_ids: vec!["to_alice".to_string()],
 			memo: None,
 		},
 		MintLog {
-			owner_id: String::from("bob.near"),
-			token_ids: vec!["to_bob".to_string()],
+			owner_id: "bob.near".parse().unwrap(),
+			token_ids: vec!["to_bob".parse().unwrap()],
 			memo: None,
 		},
 	]));
@@ -103,8 +104,8 @@ fn mint_log_multiple_logs() {
 #[test]
 fn mint_log_multiple_tokens() {
 	let log = EventLog::new(LogOption::NftMint(vec![MintLog {
-		owner_id: String::from("alice.near"),
-		token_ids: vec!["first".to_string(), "second".to_string(), "3".to_string()],
+		owner_id: "alice.near".parse().unwrap(),
+		token_ids: vec!["first".parse().unwrap(), "second".parse().unwrap(), "3".parse().unwrap()],
 		memo: None,
 	}]));
 
