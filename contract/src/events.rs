@@ -1,7 +1,7 @@
 use near_contract_standards::non_fungible_token::TokenId;
-use near_sdk::AccountId;
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::serde_json;
+use near_sdk::AccountId;
 use std::fmt;
 
 #[derive(Serialize, Deserialize)]
@@ -27,16 +27,19 @@ pub enum LogOption {
 pub struct MintLog {
 	pub owner_id: AccountId,
 	pub token_ids: Vec<TokenId>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub memo: Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct TransferLog {
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub authorized_id: Option<AccountId>,
 	pub old_owner_id: AccountId,
 	pub new_owner_id: AccountId,
 	pub token_ids: Vec<TokenId>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub memo: Option<String>,
 }
 
@@ -67,7 +70,7 @@ fn mint_log() {
 		memo: None,
 	}]));
 
-	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["aurora"],"memo":null}]}"#;
+	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["aurora"]}]}"#;
 	assert_eq!(expected, log.to_string());
 }
 
@@ -79,7 +82,7 @@ fn mint_log_empty_tokens() {
 		memo: None,
 	}]));
 
-	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"bob.near","token_ids":[],"memo":null}]}"#;
+	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"bob.near","token_ids":[]}]}"#;
 	assert_eq!(expected, log.to_string());
 }
 
@@ -98,7 +101,7 @@ fn mint_log_multiple_logs() {
 		},
 	]));
 
-	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["to_alice"],"memo":null},{"owner_id":"bob.near","token_ids":["to_bob"],"memo":null}]}"#;
+	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["to_alice"]},{"owner_id":"bob.near","token_ids":["to_bob"]}]}"#;
 	assert_eq!(expected, log.to_string());
 }
 
@@ -106,10 +109,14 @@ fn mint_log_multiple_logs() {
 fn mint_log_multiple_tokens() {
 	let log = EventLog::new(LogOption::NftMint(vec![MintLog {
 		owner_id: "alice.near".parse().unwrap(),
-		token_ids: vec!["first".parse().unwrap(), "second".parse().unwrap(), "3".parse().unwrap()],
+		token_ids: vec![
+			"first".parse().unwrap(),
+			"second".parse().unwrap(),
+			"3".parse().unwrap(),
+		],
 		memo: None,
 	}]));
 
-	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["first","second","3"],"memo":null}]}"#;
+	let expected = r#"EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[{"owner_id":"alice.near","token_ids":["first","second","3"]}]}"#;
 	assert_eq!(expected, log.to_string());
 }
