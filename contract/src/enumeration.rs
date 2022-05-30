@@ -43,10 +43,12 @@ impl NonFungibleTokenEnumeration for Contract {
 		from_index: Option<String>,
 		limit: Option<u128>,
 	) -> Vec<Token> {
-		if self.owner_list.contains(&account_id) {
-			vec![Token::default(account_id)]
-		} else {
+		let from_index : u128 = from_index.unwrap_or("0".into()).parse::<u128>().unwrap_or_default();
+
+		if !self.owner_list.contains(&account_id) || from_index != 0 {
 			vec![]
+		} else {
+			vec![Token::default(account_id)]
 		}
 	}
 }
