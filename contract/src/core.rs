@@ -1,6 +1,6 @@
 use crate::{Contract, ContractExt, Token};
 use near_contract_standards::non_fungible_token::TokenId;
-use near_sdk::{near_bindgen, AccountId, PromiseOrValue};
+use near_sdk::{assert_one_yocto, env, near_bindgen, require, AccountId, PromiseOrValue};
 
 pub trait NonFungibleTokenCore {
 	fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>);
@@ -20,7 +20,21 @@ pub trait NonFungibleTokenCore {
 
 #[near_bindgen]
 impl NonFungibleTokenCore for Contract {
-	fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>) {}
+	
+	#[payable]
+	fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>) {
+		assert_one_yocto();
+		require!(
+			self.owner_by_id.contains_key(&token_id),
+			"Sender must be the token owner.",
+		);
+
+		self.owner_by_id.remove(&token_id);
+		self.owner_by_id.insert(&token_id, &receiver_id);
+
+		self.owner_list.remove(&env::predecessor_account_id());
+		self.owner_list.insert(&receiver_id);
+	}
 
 	fn nft_transfer_call(
 		&mut self,
