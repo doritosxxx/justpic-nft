@@ -20,7 +20,7 @@ pub struct Contract {
 	metadata: LazyOption<NFTContractMetadata>,
 	total_supply: u128,
 
-	owner_by_id: LookupMap<TokenId, AccountId>,
+	owner_by_token_id: LookupMap<TokenId, AccountId>,
 	owner_list: UnorderedSet<AccountId>,
 }
 
@@ -43,7 +43,7 @@ impl Contract {
 		Self {
 			owner_id,
 			metadata: option,
-			owner_by_id: LookupMap::new("byid".as_bytes()),
+			owner_by_token_id: LookupMap::new("byid".as_bytes()),
 			owner_list: UnorderedSet::new("owners".as_bytes()),
 			total_supply: 0,
 		}

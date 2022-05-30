@@ -20,17 +20,16 @@ pub trait NonFungibleTokenCore {
 
 #[near_bindgen]
 impl NonFungibleTokenCore for Contract {
-	
 	#[payable]
 	fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>) {
 		assert_one_yocto();
 		require!(
-			self.owner_by_id.contains_key(&token_id),
+			self.owner_by_token_id.contains_key(&token_id),
 			"Sender must be the token owner.",
 		);
 
-		self.owner_by_id.remove(&token_id);
-		self.owner_by_id.insert(&token_id, &receiver_id);
+		self.owner_by_token_id.remove(&token_id);
+		self.owner_by_token_id.insert(&token_id, &receiver_id);
 
 		self.owner_list.remove(&env::predecessor_account_id());
 		self.owner_list.insert(&receiver_id);
@@ -48,7 +47,7 @@ impl NonFungibleTokenCore for Contract {
 	}
 
 	fn nft_token(&self, token_id: TokenId) -> Option<Token> {
-		let owner = self.owner_by_id.get(&token_id);
+		let owner = self.owner_by_token_id.get(&token_id);
 
 		if let None = owner {
 			return None;
