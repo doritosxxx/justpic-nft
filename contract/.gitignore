@@ -2,3 +2,4 @@
 /out
 /neardev
 /Cargo.lock
+*.address
