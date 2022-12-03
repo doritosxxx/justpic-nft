@@ -36,11 +36,6 @@ const deploy = () =>
     });
   });
 
-const save_address = (address) =>
-  new Promise((resolve, reject) => {
-    fs.writeFile("/scripts_cache/deploy.address", address, resolve);
-  });
-
 async function main() {
   await build();
   const address = await deploy();
