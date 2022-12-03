@@ -5,4 +5,4 @@ mod token_metadata;
 pub use token_metadata::TokenMetadata;
 
 mod token;
-pub use token::Token;
+pub use self::token::{Token, TokenId};

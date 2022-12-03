@@ -1,4 +1,4 @@
-use near_contract_standards::non_fungible_token::TokenId;
+use crate::structs::TokenId;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap, UnorderedSet};
 use near_sdk::{near_bindgen, AccountId, PanicOnDefault};

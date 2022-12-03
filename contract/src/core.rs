@@ -1,6 +1,7 @@
 use crate::{structs::Token, Contract, ContractExt};
-use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::{assert_one_yocto, env, near_bindgen, require, AccountId, PromiseOrValue};
+
+use crate::structs::TokenId;
 
 pub trait NonFungibleTokenCore {
     fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>);

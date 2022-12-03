@@ -1,7 +1,6 @@
-use near_contract_standards::non_fungible_token::TokenId;
+use crate::structs::TokenId;
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::serde_json;
-use near_sdk::AccountId;
+use near_sdk::{serde_json, AccountId};
 use std::fmt;
 
 #[derive(Serialize, Deserialize)]

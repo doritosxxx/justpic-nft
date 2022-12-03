@@ -1,6 +1,6 @@
 use crate::events::*;
+use crate::structs::TokenId;
 use crate::{Contract, ContractExt};
-use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::{env, near_bindgen, require, AccountId};
 
 pub trait NonFungibleTokenMint {

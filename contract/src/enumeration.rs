@@ -1,5 +1,5 @@
-use crate::{structs::Token, Contract, ContractExt};
-use near_contract_standards::non_fungible_token::TokenId;
+use crate::structs::{Token, TokenId};
+use crate::{Contract, ContractExt};
 use near_sdk::{near_bindgen, AccountId};
 
 pub trait NonFungibleTokenEnumeration {
