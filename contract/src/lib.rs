@@ -29,8 +29,8 @@ impl Contract {
     pub fn new(owner_id: AccountId) -> Self {
         let metadata = NFTContractMetadata {
             spec: String::from("nft-1.0.0"), // required, essentially a version like "nft-1.0.0"
-            name: String::from("nft-curse"), // required, ex. "Mosaics"
-            symbol: String::from("CURSE"),   // required, ex. "MOSIAC"
+            name: String::from("nft-spam"),  // required, ex. "Mosaics"
+            symbol: String::from("spam"),    // required, ex. "MOSIAC"
             icon: None,                      // Data URL
             base_uri: None, // Centralized gateway known to have reliable access to decentralized storage assets referenced by `reference` or `media` URLs
             reference: None, // URL to a JSON file with more info
