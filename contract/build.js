@@ -1,5 +1,4 @@
 const { exec, spawn } = require("child_process");
-const { promises: fs } = require("fs");
 
 const build = () =>
   new Promise((resolve, reject) => {
@@ -40,7 +39,6 @@ async function main() {
   await build();
   const address = await deploy();
   console.log(address);
-  await fs.writeFile("./scripts_cache/deploy.address", address);
 }
 
 main();
