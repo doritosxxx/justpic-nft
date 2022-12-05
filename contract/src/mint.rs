@@ -1,38 +1,27 @@
-use crate::events::*;
+use crate::events::log_mint;
 use crate::structs::TokenId;
 use crate::{Contract, ContractExt};
-use near_sdk::{env, near_bindgen, require, AccountId};
+use near_sdk::{near_bindgen, require, AccountId};
 
 pub trait NonFungibleTokenMint {
-    fn nft_mint(&mut self, token_id: TokenId, receiver_id: AccountId);
+    fn nft_mint(&mut self, receiver_id: AccountId);
 }
 
 #[near_bindgen]
 impl NonFungibleTokenMint for Contract {
-    fn nft_mint(&mut self, token_id: TokenId, receiver_id: AccountId) {
-        require!(
-            !self.owner_by_token_id.contains_key(&token_id),
-            "Token was already minted"
-        );
+    fn nft_mint(&mut self, receiver_id: AccountId) {
         require!(
             !self.owner_list.contains(&receiver_id),
             "Can't have more than one token per account"
         );
 
+        let token_id: TokenId = self.next_mint_id.to_string();
+        self.next_mint_id += 1;
+        self.total_supply += 1;
+
         self.owner_by_token_id.insert(&token_id, &receiver_id);
         self.owner_list.insert(&receiver_id);
-        self.total_supply += 1;
 
         log_mint(receiver_id, vec![token_id]);
     }
-}
-
-fn log_mint(owner_id: AccountId, token_ids: Vec<TokenId>) {
-    let log = EventLog::new(LogOption::NftMint(vec![MintLog {
-        owner_id,
-        token_ids,
-        memo: None,
-    }]));
-
-    env::log_str(&log.to_string());
 }

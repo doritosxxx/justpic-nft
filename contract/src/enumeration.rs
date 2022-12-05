@@ -49,6 +49,7 @@ impl NonFungibleTokenEnumeration for Contract {
         if !self.owner_list.contains(&account_id) || from_index != 0 {
             vec![]
         } else {
+            // Тут надо id поправить.
             vec![Token::default(account_id)]
         }
     }

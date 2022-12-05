@@ -18,6 +18,7 @@ pub struct Contract {
     owner_id: AccountId,
     metadata: LazyOption<NFTContractMetadata>,
     total_supply: u128,
+    next_mint_id: u128,
 
     owner_by_token_id: LookupMap<TokenId, AccountId>,
     owner_list: UnorderedSet<AccountId>,
@@ -45,6 +46,7 @@ impl Contract {
             owner_by_token_id: LookupMap::new("byid".as_bytes()),
             owner_list: UnorderedSet::new("owners".as_bytes()),
             total_supply: 0,
+            next_mint_id: 0,
         }
     }
 }

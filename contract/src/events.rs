@@ -1,6 +1,6 @@
 use crate::structs::TokenId;
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{serde_json, AccountId};
+use near_sdk::{env, serde_json, AccountId};
 use std::fmt;
 
 #[derive(Serialize, Deserialize)]
@@ -60,6 +60,32 @@ impl EventLog {
         }
     }
 }
+
+// Events.
+
+pub fn log_mint(owner_id: AccountId, token_ids: Vec<TokenId>) {
+    let log = EventLog::new(LogOption::NftMint(vec![MintLog {
+        owner_id,
+        token_ids,
+        memo: None,
+    }]));
+
+    env::log_str(&log.to_string());
+}
+
+pub fn log_transfer(old_owner_id: AccountId, new_owner_id: AccountId, token_ids: Vec<TokenId>) {
+    let log = EventLog::new(LogOption::NftTransfer(vec![TransferLog {
+        old_owner_id,
+        new_owner_id,
+        token_ids,
+        memo: None,
+        authorized_id: None,
+    }]));
+
+    env::log_str(&log.to_string());
+}
+
+// Tests.
 
 #[test]
 fn mint_log() {
