@@ -25,3 +25,103 @@ impl NonFungibleTokenMint for Contract {
         log_mint(receiver_id, vec![token_id]);
     }
 }
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use crate::core::NonFungibleTokenCore;
+
+    use super::*;
+    use near_sdk::test_utils::{accounts, VMContextBuilder};
+    use near_sdk::{testing_env, VMContext};
+
+    fn get_context(signer: AccountId, is_view: bool) -> VMContext {
+        VMContextBuilder::new()
+            .signer_account_id(signer)
+            .is_view(is_view)
+            .build()
+    }
+
+    #[test]
+    fn mint_for_yourself() {
+        let owner = accounts(0);
+        let alice = accounts(1);
+        testing_env!(get_context(alice.clone(), false));
+        let mut contract = Contract::new(owner);
+
+        contract.nft_mint(alice.clone());
+
+        let minted_token = contract.nft_token("0".to_string());
+
+        assert!(minted_token != None, "Token not minted");
+        assert!(
+            minted_token.unwrap().owner_id == alice,
+            "Token receiver is not a token owner"
+        )
+    }
+
+    #[test]
+    fn mint_for_other() {
+        let owner = accounts(0);
+        let alice = accounts(1);
+        let bob = accounts(2);
+        testing_env!(get_context(alice.clone(), false));
+        let mut contract = Contract::new(owner);
+
+        contract.nft_mint(bob.clone());
+
+        let minted_token = contract.nft_token("0".to_string());
+
+        assert!(minted_token != None, "Token not minted");
+        assert!(
+            minted_token.unwrap().owner_id == bob,
+            "Token receiver is not an owner"
+        )
+    }
+
+    #[test]
+    #[should_panic(expected = "Can't have more than one token per account")]
+    fn mint_two_tokens_for_one_address() {
+        let owner = accounts(0);
+        let alice = accounts(1);
+        testing_env!(get_context(alice.clone(), false));
+        let mut contract = Contract::new(owner);
+
+        contract.nft_mint(alice.clone());
+        contract.nft_mint(alice.clone());
+    }
+
+    #[test]
+    fn mint_tokens_for_different_addresses() {
+        let owner = accounts(0);
+        let alice = accounts(1);
+        let bob = accounts(2);
+        let charles = accounts(3);
+        testing_env!(get_context(alice.clone(), false));
+        let mut contract = Contract::new(owner);
+
+        contract.nft_mint(alice.clone());
+        contract.nft_mint(bob.clone());
+        contract.nft_mint(charles.clone());
+
+        let minted_token0 = contract.nft_token("0".to_string());
+        let minted_token1 = contract.nft_token("1".to_string());
+        let minted_token2 = contract.nft_token("2".to_string());
+
+        assert!(minted_token0 != None, "Token 0 not minted");
+        assert!(minted_token1 != None, "Token 1 not minted");
+        assert!(minted_token2 != None, "Token 2 not minted");
+
+        assert!(
+            minted_token0.unwrap().owner_id == alice,
+            "Token receiver is not an owner"
+        );
+        assert!(
+            minted_token1.unwrap().owner_id == bob,
+            "Token receiver is not an owner"
+        );
+        assert!(
+            minted_token2.unwrap().owner_id == charles,
+            "Token receiver is not an owner"
+        );
+    }
+}
