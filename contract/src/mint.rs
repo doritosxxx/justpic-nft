@@ -111,17 +111,16 @@ mod tests {
         assert!(minted_token1 != None, "Token 1 not minted");
         assert!(minted_token2 != None, "Token 2 not minted");
 
-        assert!(
-            minted_token0.unwrap().owner_id == alice,
-            "Token receiver is not an owner"
-        );
-        assert!(
-            minted_token1.unwrap().owner_id == bob,
-            "Token receiver is not an owner"
-        );
-        assert!(
-            minted_token2.unwrap().owner_id == charles,
-            "Token receiver is not an owner"
-        );
+        let token0 = minted_token0.unwrap();
+        let token1 = minted_token1.unwrap();
+        let token2 = minted_token2.unwrap();
+
+        assert!(token0.token_id == "0", "Token 0 has id={}", token0.token_id);
+        assert!(token1.token_id == "1", "Token 1 has id={}", token1.token_id);
+        assert!(token2.token_id == "2", "Token 2 has id={}", token2.token_id);
+
+        assert!(token0.owner_id == alice, "Token receiver is not an owner");
+        assert!(token1.owner_id == bob, "Token receiver is not an owner");
+        assert!(token2.owner_id == charles, "Token receiver is not an owner");
     }
 }
