@@ -86,6 +86,6 @@ impl NonFungibleTokenCore for Contract {
         }
 
         let owner_id = owner.unwrap();
-        return Some(Token::default(owner_id));
+        return Some(Token::default(owner_id, token_id));
     }
 }

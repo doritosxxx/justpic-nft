@@ -2,6 +2,8 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::Base64VecU8;
 use near_sdk::serde::{Deserialize, Serialize};
 
+use super::TokenId;
+
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Clone, PartialEq)]
 #[cfg_attr(feature = "abi", derive(schemars::JsonSchema))]
 #[serde(crate = "near_sdk::serde")]
@@ -21,7 +23,7 @@ pub struct TokenMetadata {
 }
 
 impl TokenMetadata {
-    pub fn default() -> Self {
+    pub fn default(token_id: TokenId) -> Self {
         Self {
 			title: Some("Насрал".into()),
 			description: Some("Томас Шелби".into()),

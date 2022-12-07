@@ -16,11 +16,11 @@ pub struct Token {
 }
 
 impl Token {
-    pub fn default(owner_id: AccountId) -> Self {
+    pub fn default(owner_id: AccountId, token_id: TokenId) -> Self {
         Self {
-            metadata: TokenMetadata::default(),
+            metadata: TokenMetadata::default(token_id.clone()),
             owner_id: owner_id,
-            token_id: "1".into(),
+            token_id,
         }
     }
 }
