@@ -15,7 +15,6 @@ async function main() {
   const { mint, init } = get_methods(contract_address, caller_address);
 
   await mint({
-    token_id: "4",
     receiver_id: caller_address,
   });
 
