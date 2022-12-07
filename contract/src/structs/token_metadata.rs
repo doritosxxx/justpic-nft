@@ -25,18 +25,18 @@ pub struct TokenMetadata {
 impl TokenMetadata {
     pub fn default(token_id: TokenId) -> Self {
         Self {
-			title: Some("Насрал".into()),
-			description: Some("Томас Шелби".into()),
-			media: Some("https://bafkreifsuckh4xcokhfylvqyfepbl6q3kzwqgtyd5gfj3k3zoeodbmun4m.ipfs.nftstorage.link/".into()),
-			media_hash: None,
-			copies: None,
-			issued_at: None,
-			expires_at: None,
-			starts_at: None,
-			updated_at: None,
-			extra: None,
-			reference: None,
-			reference_hash: None,
-		}
+            title: Some("Numbers".into()),
+            description: Some("Well just numbers".into()),
+            media: Some("https://nft-spam-backend.glitch.me/".to_string() + &token_id),
+            media_hash: None,
+            copies: None,
+            issued_at: None,
+            expires_at: None,
+            starts_at: None,
+            updated_at: None,
+            extra: None,
+            reference: None,
+            reference_hash: None,
+        }
     }
 }
