@@ -1,4 +1,4 @@
-use crate::events::{log_mint, log_transfer};
+use crate::events::log_transfer;
 use crate::mint::NonFungibleTokenMint;
 use crate::{structs::Token, Contract, ContractExt};
 use near_sdk::{assert_one_yocto, env, near_bindgen, require, AccountId, PromiseOrValue};
@@ -16,9 +16,6 @@ pub trait NonFungibleTokenCore {
     ) -> PromiseOrValue<bool>;
 
     fn nft_token(&self, token_id: TokenId) -> Option<Token>;
-
-    // TODO:
-    // fn nft_resolve_transfer
 }
 
 #[near_bindgen]
@@ -74,8 +71,7 @@ impl NonFungibleTokenCore for Contract {
         memo: Option<String>,
         msg: String,
     ) -> PromiseOrValue<bool> {
-        PromiseOrValue::Value(true)
-        //todo!("disabled")
+        todo!("disabled")
     }
 
     fn nft_token(&self, token_id: TokenId) -> Option<Token> {
@@ -87,5 +83,48 @@ impl NonFungibleTokenCore for Contract {
 
         let owner_id = owner.unwrap();
         return Some(Token::default(owner_id, token_id));
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use crate::core::NonFungibleTokenCore;
+
+    use super::*;
+    use near_sdk::test_utils::{accounts, VMContextBuilder};
+    use near_sdk::{testing_env, VMContext};
+
+    fn get_context(signer: AccountId, is_view: bool) -> VMContext {
+        VMContextBuilder::new()
+            .signer_account_id(signer)
+            .is_view(is_view)
+            .attached_deposit(1)
+            .build()
+    }
+
+    #[test]
+    #[should_panic(expected = "memo should provide second address to transfer.")]
+
+    fn transfer_with_one_receiver() {
+        let owner = accounts(0);
+        let alice = accounts(1);
+        let bob = accounts(2);
+        testing_env!(get_context(alice.clone(), false));
+        let mut contract = Contract::new(owner);
+
+        contract.nft_mint(alice.clone());
+
+        let minted_token = contract.nft_token("0".to_string());
+
+        if let Some(token) = minted_token {
+            assert!(
+                token.token_id == "0",
+                "First minted toked_id is expected to be 0"
+            );
+        } else {
+            panic!("Token was not minted");
+        }
+
+        contract.nft_transfer(bob, "0".into(), None);
     }
 }
